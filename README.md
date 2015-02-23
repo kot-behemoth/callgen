@@ -1,3 +1,3 @@
-# Calgen
+# Callgen
 
-**Cal**igraphy **Gen**erator - a simple script for generating lined paper for practising calligraphy.
+**Call**igraphy **Gen**erator - a simple script for generating lined paper for practising calligraphy.
