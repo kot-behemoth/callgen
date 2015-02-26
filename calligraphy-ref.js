@@ -1,13 +1,13 @@
 var width = 600;
 var height = 300;
 
-var holder = d3.select("body")
+var page = d3.select("body")
       .append("svg")
       .attr("width", width)
       .attr("height", height);
 
 // draw d3.js text
-holder.append("text")
+page.append("text")
   .attr("class", "d3js")
   .style("fill", "black")
   .style("font-size", "56px")
@@ -17,7 +17,7 @@ holder.append("text")
   .text("d3.js");
 
 // draw d3noob.org text
-holder.append("text")
+page.append("text")
   .attr("class", "d3noob")
   .style("fill", "black")
   .style("font-size", "56px")
@@ -42,10 +42,10 @@ function update(nAngle) {
   d3.select("#nAngle").property("value", nAngle);
 
   // adjust d3.js text
-  holder.select("text.d3js")
+  page.select("text.d3js")
     .attr("transform", "translate(300,55) rotate("+nAngle+")");
 
   // adjust d3noob.org text
-  holder.select("text.d3noob")
+  page.select("text.d3noob")
     .attr("transform", "translate(300,130) rotate("+(360 - nAngle)+")");
 }

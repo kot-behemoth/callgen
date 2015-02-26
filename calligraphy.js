@@ -1,13 +1,38 @@
-var width = 210 * 0.8;
-var height = 297 * 0.8;
-//var width = 210;
-//var height = 297;
+function mm(n){ return n*mm2px; }
 
-var holder = d3.select("body")
-    .append("svg")
-    .attr('class', 'page')
-    .attr("width", width+'mm')
-    .attr("height", height+'mm');
+// 1 px = 0.265 mm
+var mm2px = 96/25.4,
+    width_mm = 210,
+    height_mm = 297,
+    width = mm(width_mm),
+    height = mm(height_mm),
+    hmargin = width * 0.08,
+    vmargin = height * 0.05,
+    inner_width = width - 2*hmargin,
+    inner_height = height - 2*vmargin
+    ;
+
+var page = d3.select("#page")
+    .attr("width", width_mm+'mm')
+    .attr("height", height_mm+'mm');
+
+
+function translate(x, y){
+    return "translate($$x$$, $$y$$)".replace(
+        '$$x$$', x).replace('$$y$$', y)
+}
+
+page.append("rect")
+    .attr("id", "inner-page")
+    .attr("transform", function() {
+        return translate(hmargin, vmargin)
+    })
+    .attr('width', inner_width)
+    .attr('height', inner_height)
+    .style('stroke', '#000')
+    .style('stroke-width', '1px')
+    .style('fill-opacity', 0)
+;
 
 d3.select("#save").on("click", function(){
         var svg = d3.select("svg")
@@ -30,7 +55,7 @@ d3.select("#save").on("click", function(){
 );
 
 // draw d3.js text
-holder.append("text")
+page.append("text")
     .attr("class", "d3js")
     .style("fill", "black")
     .style("font-size", "56px")
@@ -40,7 +65,7 @@ holder.append("text")
     .text("d3.js");
 
 // draw d3noob.org text
-holder.append("text")
+page.append("text")
     .attr("class", "d3noob")
     .style("fill", "black")
     .style("font-size", "56px")
@@ -65,10 +90,10 @@ function update(nAngle) {
     d3.select("#nAngle").property("value", nAngle);
 
     // adjust d3.js text
-    holder.select("text.d3js")
+    page.select("text.d3js")
         .attr("transform", "translate(300,55) rotate("+nAngle+")");
 
     // adjust d3noob.org text
-    holder.select("text.d3noob")
+    page.select("text.d3noob")
         .attr("transform", "translate(300,130) rotate("+(360 - nAngle)+")");
 }
