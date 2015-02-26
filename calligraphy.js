@@ -9,29 +9,53 @@ var mm2px = 96/25.4,
     hmargin = width * 0.08,
     vmargin = height * 0.05,
     inner_width = width - 2*hmargin,
-    inner_height = height - 2*vmargin
+    inner_height = height - 2*vmargin,
+
+    nib_width = mm(1.5),
+    x_height = 5,
+    cap_height = 5,
+    ascender = 1,
+    descender = 1,
+    line_spacing = 6,
+
+    bbh = (x_height+ascender+descender+line_spacing)*nib_width,
+    n_lines = Math.floor(inner_height/bbh)
     ;
+
+//console.log(n_lines)
 
 var page = d3.select("#page")
     .attr("width", width_mm+'mm')
     .attr("height", height_mm+'mm');
 
-
-function translate(x, y){
+function translate(x, y) {
     return "translate($$x$$, $$y$$)".replace(
         '$$x$$', x).replace('$$y$$', y)
 }
 
-page.append("rect")
-    .attr("id", "inner-page")
+var inner_page = page.append('g')
     .attr("transform", function() {
         return translate(hmargin, vmargin)
-    })
+    });
+
+inner_page.append("rect")
+    .attr("id", "inner-page")
     .attr('width', inner_width)
     .attr('height', inner_height)
     .style('stroke', '#000')
     .style('stroke-width', '1px')
     .style('fill-opacity', 0)
+;
+
+var offsets = d3.range(0, n_lines).map(function(l){return l*bbh});
+
+var baselines = inner_page.selectAll('circle')
+    .data(offsets)
+    .enter().append('circle')
+    .attr('cx', 0)
+    .attr('cy', function(d) { return d; })
+    .attr('r', 5)
+    .attr('fill', 'red')
 ;
 
 d3.select("#save").on("click", function(){
