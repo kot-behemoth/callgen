@@ -16,7 +16,7 @@ var mm2px = 96/25.4,
     cap_height = 5,
     ascender = 1,
     descender = 1,
-    line_spacing = 6,
+    line_spacing = 3,
 
     bbh = (x_height+ascender+descender+line_spacing)*nib_width,
     n_lines = Math.floor(inner_height/bbh)
@@ -42,21 +42,44 @@ inner_page.append("rect")
     .attr("id", "inner-page")
     .attr('width', inner_width)
     .attr('height', inner_height)
-    .style('stroke', '#000')
+    .style('stroke', '#ccc')
     .style('stroke-width', '1px')
     .style('fill-opacity', 0)
 ;
 
-var offsets = d3.range(0, n_lines).map(function(l){return l*bbh});
+var offsets = d3.range(0, n_lines+1).map(function(l){return l*bbh});
 
-var baselines = inner_page.selectAll('circle')
+var lines = inner_page.selectAll('g')
     .data(offsets)
-    .enter().append('circle')
-    .attr('cx', 0)
-    .attr('cy', function(d) { return d; })
-    .attr('r', 5)
-    .attr('fill', 'red')
+    .enter().append('g')
+    .attr('transform', function(d) { return translate(0, d); })
 ;
+
+var bounding_boxes = lines.append('rect')
+    .attr('width', inner_width)
+    .attr('height', bbh-(line_spacing*nib_width))
+    .style('stroke', '#ccc')
+    .style('stroke-width', '1px')
+    .style('fill-opacity', 0)
+;
+
+var baselines = lines.append('line')
+    .attr('x1', 0)
+    .attr('y1', (ascender+x_height)*nib_width)
+    .attr('x2', inner_width)
+    .attr('y2', (ascender+x_height)*nib_width)
+    .style('stroke', 'red')
+    .style('stroke-width', '1px')
+;
+
+var x_heights = lines.append('line')
+        .attr('x1', 0)
+        .attr('y1', (ascender)*nib_width)
+        .attr('x2', inner_width)
+        .attr('y2', (ascender)*nib_width)
+        .style('stroke', 'red')
+        .style('stroke-width', '1px')
+    ;
 
 d3.select("#save").on("click", function(){
         var svg = d3.select("svg")
@@ -79,24 +102,24 @@ d3.select("#save").on("click", function(){
 );
 
 // draw d3.js text
-page.append("text")
-    .attr("class", "d3js")
-    .style("fill", "black")
-    .style("font-size", "56px")
-    .attr("dy", ".35em")
-    .attr("text-anchor", "middle")
-    .attr("transform", "translate(300,55) rotate(0)")
-    .text("d3.js");
-
-// draw d3noob.org text
-page.append("text")
-    .attr("class", "d3noob")
-    .style("fill", "black")
-    .style("font-size", "56px")
-    .attr("dy", ".35em")
-    .attr("text-anchor", "middle")
-    .attr("transform", "translate(300,130) rotate(0)")
-    .text("d3noob.org");
+//page.append("text")
+//    .attr("class", "d3js")
+//    .style("fill", "black")
+//    .style("font-size", "56px")
+//    .attr("dy", ".35em")
+//    .attr("text-anchor", "middle")
+//    .attr("transform", "translate(300,55) rotate(0)")
+//    .text("d3.js");
+//
+//// draw d3noob.org text
+//page.append("text")
+//    .attr("class", "d3noob")
+//    .style("fill", "black")
+//    .style("font-size", "56px")
+//    .attr("dy", ".35em")
+//    .attr("text-anchor", "middle")
+//    .attr("transform", "translate(300,130) rotate(0)")
+//    .text("d3noob.org");
 
 // when the input range changes update the rectangle
 d3.select("#nAngle").on("input", function() {
