@@ -1,7 +1,14 @@
 function mm(n){ return n*mm2px; }
 
 // 1 px = 0.265 mm
-var mm2px = 96/25.4,
+// (pixels*25.4)/dpi
+// standard inkscape setting
+// 10 mm = 35.433 px
+// mm = (pixels*25.4)/dpi
+// px = (pixels*25.4)/dpi
+// 10 px = 2.822 mm
+var dpi = 90,
+    mm2px = dpi/25.4,
     width_mm = 210,
     height_mm = 297,
     width = mm(width_mm),
@@ -25,8 +32,8 @@ var mm2px = 96/25.4,
 //console.log(n_lines)
 
 var page = d3.select("#page")
-    .attr("width", width_mm+'mm')
-    .attr("height", height_mm+'mm');
+    .attr("width", mm(width_mm))
+    .attr("height", mm(height_mm));
 
 function translate(x, y) {
     return "translate($$x$$, $$y$$)".replace(
@@ -38,14 +45,14 @@ var inner_page = page.append('g')
         return translate(hmargin, vmargin)
     });
 
-inner_page.append("rect")
-    .attr("id", "inner-page")
-    .attr('width', inner_width)
-    .attr('height', inner_height)
-    .style('stroke', '#ccc')
-    .style('stroke-width', '1px')
-    .style('fill-opacity', 0)
-;
+//inner_page.append("rect")
+//    .attr("id", "inner-page")
+//    .attr('width', inner_width)
+//    .attr('height', inner_height)
+//    .style('stroke', '#ddd')
+//    .style('stroke-width', '1px')
+//    .style('fill-opacity', 0)
+//;
 
 var offsets = d3.range(0, n_lines+1).map(function(l){return l*bbh});
 
@@ -58,7 +65,7 @@ var lines = inner_page.selectAll('g')
 var bounding_boxes = lines.append('rect')
     .attr('width', inner_width)
     .attr('height', bbh-(line_spacing*nib_width))
-    .style('stroke', '#ccc')
+    .style('stroke', '#eee')
     .style('stroke-width', '1px')
     .style('fill-opacity', 0)
 ;
@@ -68,7 +75,7 @@ var baselines = lines.append('line')
     .attr('y1', (ascender+x_height)*nib_width)
     .attr('x2', inner_width)
     .attr('y2', (ascender+x_height)*nib_width)
-    .style('stroke', 'red')
+    .style('stroke', '#999')
     .style('stroke-width', '1px')
 ;
 
@@ -77,7 +84,7 @@ var x_heights = lines.append('line')
         .attr('y1', (ascender)*nib_width)
         .attr('x2', inner_width)
         .attr('y2', (ascender)*nib_width)
-        .style('stroke', 'red')
+        .style('stroke', '#999')
         .style('stroke-width', '1px')
     ;
 
